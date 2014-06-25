@@ -16,7 +16,6 @@ Example:
 
     app.get('/users', function* () {
         var userIds = yield data.getUserIds();
-        
         this.body = userIds.map(function(userId) {
             // THIS DOESN'T WORK
             return data.getUserInfo(userId);
@@ -54,6 +53,8 @@ An chaining example, assuming an async `sleep` function:
             return a + b;
         });
 
+Due to the high precedence of `yield`, it applies to the entire `ay`-expression and so the result of `reduce` is `yield`ed.
+
 Note that only the standard array methods that accept a callback are included. For other methods you can easily `yield` to get an ordinary array - note the placement of the parentheses:
 
     var moreNums = (yield ay(nums)
@@ -62,3 +63,18 @@ Note that only the standard array methods that accept a callback are included. F
             return i * 2;
         }))
         .concat([10, 20, 30]);
+
+A real example using `forEach, from [bitstupid.com](https://github.com/danielearwicker/bitstupid):
+
+    app.get('/bits/:of', function* () {
+        var bit = yield data.readBit(
+            this.params.of.toLowerCase(), 
+            this.query.skip, 
+            this.query.take);
+
+        yield ay(bit.changes).forEach(function* (change) {
+            change.info = yield data.getInfo(change.by);
+        });
+
+        this.body = bit;
+    });

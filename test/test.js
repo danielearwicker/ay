@@ -11,7 +11,7 @@ function sleep(ms) {
 
 describe('ay', function() {
     describe('chaining', function() {
-        
+
         it('should work the same as ordinary array methods', co(function* () {
     
             var nums = [1, 2, 3, 4, 5];
@@ -26,9 +26,9 @@ describe('ay', function() {
                 .reduce(function (a, b) {
                     return a + b;
                 });
-        
+
             assert.equal(28, result1);
-                    
+
             var result2 = yield ay(nums)
                 .map(function* (i) {
                     yield sleep(10);
