@@ -2,7 +2,7 @@
 
 Chainable array operations suitable for use inside coroutine generators (NB. this is NOT about lazy list transformation!)
 
-**a**rray + **y**ield
+The **a** is for array, the **y** is for yield.
 
 ## Installation
 
