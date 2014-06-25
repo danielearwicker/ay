@@ -1,0 +1,25 @@
+{
+  "name": "ay",
+  "version": "0.1.0",
+  "description": "Chainable array operations suitable for use inside coroutine generators (NB. this is NOT about lazy list transformation!) ",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --harmony-generators"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danielearwicker/ay.git"
+  },
+  "keywords": [
+    "co"
+  ],
+  "author": "Daniel Earwicker <dan@earwicker.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/danielearwicker/ay/issues"
+  },
+  "homepage": "https://github.com/danielearwicker/ay",
+  "devDependencies": {
+    "co": "^3.0.6"
+  }
+}
