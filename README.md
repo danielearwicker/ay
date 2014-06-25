@@ -30,16 +30,13 @@ Using `ay`, we can wrap an ordinary array in an object that has the same callbac
     var ay = require('ay');
     
     app.get('/users', function* () {
-        var userIds = yield data.getUserIds(); // array of IDs
-        
+        var userIds = yield data.getUserIds();
         this.body = yield ay(userIds).map(function* (userId) {
-            
-            return yield data.getUserInfo(userId);
-            
-        }).generate();
+            return yield data.getUserInfo(userId);  
+        });
     });
 
-The `map` function returns another `ay` wrapper, so further calls can be chained. The `generate` method allows you to get at the resulting array, and is itself a generator, so the whole expression begins with a `yield`. This has the effect of "transmitting" the `yield`s inside the callback to the outer context so they can be managed by the coroutine runner.
+The `map` function returns another `ay` wrapper, so further calls can be chained. An `ay` wrapper can be yielded to get the resulting array (it is "thenable", so mimics a promise sufficiently for `co`). This has the effect of "transmitting" the `yield`s inside the callback to the outer context so they can be managed by the coroutine runner.
 
 An chaining example, assuming an async `sleep` function:
 
@@ -55,6 +52,13 @@ An chaining example, assuming an async `sleep` function:
         .reduce(function* (a, b) {
             yield sleep(10);
             return a + b;
-        })
-        .generate();
+        });
 
+Note that only the standard array methods that accept a callback are included. For other methods you can easily `yield` to get an ordinary array - note the placement of the parentheses:
+
+    var moreNums = (yield ay(nums)
+        .map(function* (i) {
+            yield sleep(10);
+            return i * 2;
+        }))
+        .concat([10, 20, 30]);

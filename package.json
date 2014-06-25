@@ -21,5 +21,8 @@
   "homepage": "https://github.com/danielearwicker/ay",
   "devDependencies": {
     "co": "^3.0.6"
+  },
+  "dependencies": {
+    "co": "^3.0.6"
   }
 }

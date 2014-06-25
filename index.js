@@ -1,3 +1,5 @@
+var co = require('co');
+
 var prototype = {
     map: function(gen /*, thisArg */) {
         var self = this;
@@ -106,6 +108,15 @@ var prototype = {
                 if (i in ar) {
                      yield gen.call(thisArg, ar[i], i, ar);
                 }
+            }
+        });
+    },
+    then: function(done, fail) {
+        co(this.generate())(function(err, val) {
+            if (err) {
+                fail(err);
+            } else {
+                done(val);
             }
         });
     }
