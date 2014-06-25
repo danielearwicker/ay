@@ -96,6 +96,18 @@ var prototype = {
             }
             return false;
         });
+    },
+    forEach: function(gen /*, thisArg */) {
+        var self = this;
+        return ay(function*() {
+            var ar = yield self.generate(), len = ar.length >>> 0,
+                thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+            for (var i = 0; i < len; i++) {
+                if (i in ar) {
+                     yield gen.call(thisArg, ar[i], i, ar);
+                }
+            }
+        });
     }
 };
 
