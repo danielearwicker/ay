@@ -1,28 +1,26 @@
 var co = require('co');
 
 var prototype = {
-    map: function(gen /*, thisArg */) {
+    map: function(gen, thisArg ) {
         var self = this;
-        return ay(function*() {            
-            var ar = yield self.generate(), 
-                len = ar.length >>> 0, 
-                result = new Array(len),
-                thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+        return ay(function*() {
+            var ar = yield self.generate(),
+                len = ar.length >>> 0,
+                result = new Array(len);
             for (var i = 0; i < len; i++) {
                 if (i in ar) {
                     result[i] = yield gen.call(thisArg, ar[i], i, ar);
                 }
             }
             return result;
-        })
+        });
     },
-    filter: function(gen /*, thisArg */) {
+    filter: function(gen, thisArg) {
         var self = this;
         return ay(function*() {
             var ar = yield self.generate(),
-                len = ar.length >>> 0, 
-                result = [],        
-                thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+                len = ar.length >>> 0,
+                result = [];
             for (var i = 0; i < len; i++) {
                 if (i in ar && (yield gen.call(thisArg, ar[i], i, ar))) {
                     result.push(ar[i]);
@@ -35,10 +33,10 @@ var prototype = {
         var self = this;
         return ay(function*() {
             var ar = yield self.generate(), len = ar.length >>> 0, k = 0, value;
-            if (arguments.length >= 2) {
-                value = arguments[1];
+            if (init !== undefined) {
+                value = init;
             } else {
-                while (k < len && !k in ar) k++;
+                while (k < len && !(k in ar)) k++;
                 if (k >= len) {
                     throw new TypeError('Reduce of empty array with no initial value');
                 }
@@ -56,10 +54,10 @@ var prototype = {
         var self = this;
         return ay(function*() {
             var ar = yield self.generate(), len = ar.length >>> 0, k = len - 1, value;
-            if (arguments.length >= 2) {
-                value = arguments[1];
+            if (init !== undefined) {
+                value = init;
             } else {
-                while (k >= 0 && !k in t) k--;
+                while (k >= 0 && !(k in ar )) k--;
                 if (k < 0) {
                     throw new TypeError('Reduce of empty array with no initial value');
                 }
@@ -73,11 +71,10 @@ var prototype = {
             return value;
         });
     },
-    every: function(gen /*, thisArg */) {
+    every: function(gen, thisArg) {
         var self = this;
         return ay(function*() {
-            var ar = yield self.generate(), len = ar.length >>> 0,
-                thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+            var ar = yield self.generate(), len = ar.length >>> 0;
             for (var i = 0; i < len; i++) {
                 if ((i in ar) && !(yield gen.call(thisArg, ar[i], i, ar))) {
                     return false;
@@ -86,11 +83,10 @@ var prototype = {
             return true;
        });
     },
-    some: function(gen /*, thisArg */) {
+    some: function(gen, thisArg) {
         var self = this;
         return ay(function*() {
-            var ar = yield self.generate(), len = ar.length >>> 0,
-                thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+            var ar = yield self.generate(), len = ar.length >>> 0;
             for (var i = 0; i < len; i++) {
                 if ((i in ar) && (yield gen.call(thisArg, ar[i], i, ar))) {
                     return true;
@@ -99,14 +95,13 @@ var prototype = {
             return false;
         });
     },
-    forEach: function(gen /*, thisArg */) {
+    forEach: function(gen, thisArg) {
         var self = this;
         return ay(function*() {
-            var ar = yield self.generate(), len = ar.length >>> 0,
-                thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+            var ar = yield self.generate(), len = ar.length >>> 0;
             for (var i = 0; i < len; i++) {
                 if (i in ar) {
-                     yield gen.call(thisArg, ar[i], i, ar);
+                    yield gen.call(thisArg, ar[i], i, ar);
                 }
             }
         });
@@ -124,7 +119,7 @@ var prototype = {
 
 var ay = module.exports = function(g) {
     if (typeof g !== 'function') {
-        g = g === void 0 ? [] : Array.isArray(g) ? g : [g];    
+        g = g === void 0 ? [] : Array.isArray(g) ? g : [g];
         return ay(function* () { return g; });
     }
     return Object.create(prototype, {
