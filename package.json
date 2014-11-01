@@ -1,6 +1,6 @@
 {
   "name": "ay",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Chainable array operations suitable for use inside coroutine generators (NB. this is NOT about lazy list transformation!) ",
   "main": "index.js",
   "scripts": {
